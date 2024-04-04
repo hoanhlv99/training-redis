@@ -1,0 +1,27 @@
+version: '2'
+services:
+    training-redis-php-fpm:
+        build: php-fpm
+        container_name: training-redis-php-fpm
+        #ports:
+        #    - 9006:9000
+        volumes:
+            - /var/www/html/training-redis:/var/www/html/
+        mem_limit: 128m
+        networks:
+                - redis-dev
+    training-redis-nginx:
+        build: nginx_web
+        container_name: training-redis-nginx
+        ports:
+            - 8089:80
+        volumes:
+            - /var/www/html/training-redis:/var/www/html/
+        links:
+            - training-redis-php-fpm
+        mem_limit: 128m
+        networks:
+                - redis-dev
+networks:
+  redis-dev:
+    external: true
