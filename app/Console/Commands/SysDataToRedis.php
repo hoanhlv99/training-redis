@@ -43,7 +43,7 @@ class SysDataToRedis extends Command
         try {
             Log::info('start sys data to redis');
 
-            $data = SbUserViewTmp::query()->get();
+            $data = SbUserViewTmp::query()->orderBy('created_at')->get();
             $redis = Redis::connection();
             foreach ($data as $value) {
                 $this->sysUserInfo($redis, $value);
@@ -73,7 +73,7 @@ class SysDataToRedis extends Command
 
     private function sysHistoryAccess($redis, $data)
     {
-        $key= 'user_access_history:' . $data->imei;
+        $key= 'history_access:' . $data->imei;
         $time = strtotime($data->created_at);
         $redis->zadd($key, $time, $data->target);
     }
